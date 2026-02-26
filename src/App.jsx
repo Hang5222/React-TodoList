@@ -1,60 +1,59 @@
 import { useState, useEffect } from 'react';
-// 引入 CSS 模块
 import styles from './App.module.css';
-
-// 🌟 引入刚才拆分出去的子组件
 import Header from './components/Header';
 import TodoInput from './components/TodoInput';
 import TodoItem from './components/TodoItem';
 
+// 🌟 1. 引入 uuid
+import { v4 as uuidv4 } from 'uuid';
+
 function App() {
-  // --- 1. 核心数据 (CEO 掌握核心科技) ---
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem('my-todo-list');
-    return savedTodos ? JSON.parse(savedTodos) : ['组件化开发 React', '学习 Props'];
+    // 如果有存档，直接用；如果没有，给个默认的对象数据
+    return savedTodos ? JSON.parse(savedTodos) : [
+      { id: uuidv4(), text: '学习 React' },
+      { id: uuidv4(), text: '数据结构升级' }
+    ];
   });
 
-  // --- 2. 副作用 (自动存档) ---
   useEffect(() => {
     localStorage.setItem('my-todo-list', JSON.stringify(todos));
   }, [todos]);
 
-  // --- 3. 核心业务逻辑 ---
-  
-  // 新增逻辑：接收子组件传来的 newTodo 文字
-  function handleAdd(newTodo) {
-    setTodos([...todos, newTodo]);
+  // 🌟 2. 修改添加逻辑：不再只存字符串，而是存一个对象
+  function handleAdd(newTodoText) {
+    const newTodoObj = {
+      id: uuidv4(), // 自动生成一个类似 '9b1deb4d-...' 的 ID
+      text: newTodoText
+    };
+    setTodos([...todos, newTodoObj]);
   }
 
-  // 删除逻辑
-  function handleDelete(indexToDelete) {
-    setTodos(todos.filter((_, index) => index !== indexToDelete));
+  // 🌟 3. 修改删除逻辑：根据 ID 删，而不是根据 index 删（更安全）
+  function handleDelete(id) {
+    // 只要 id 不一样的都留下
+    setTodos(todos.filter(todo => todo.id !== id));
   }
 
-  // --- 4. 界面组装 ---
   return (
     <div className={styles.container}>
-      
-      {/* 给 Header 传一个 title 属性 */}
-      <Header title="我的 React 清单" />
-
-      {/* 给 TodoInput 传一个函数，让它在添加时通知我 */}
+      <Header title="React 待办清单 Pro" />
       <TodoInput onAdd={handleAdd} />
 
-      {/* 列表区域 */}
       <ul className={styles.todoList}>
-        {todos.map((todo, index) => (
-          // 渲染每一个子项，把 content 和删除函数传下去
+        {/* 🌟 4. 遍历时，item 现在是一个对象 {id, text} */}
+        {todos.map((item) => (
           <TodoItem 
-            key={index} 
-            content={`${index + 1}. ${todo}`} 
-            onDelete={() => handleDelete(index)} 
+            key={item.id}         // ✅ 终于可以用唯一的 id 做 key 了！
+            content={item.text}   // 传下去的文字是 item.text
+            onDelete={() => handleDelete(item.id)} // 删除时传 ID
           />
         ))}
       </ul>
       
       <p style={{ marginTop: '20px', color: '#aaa', fontSize: '12px' }}>
-        数据已自动保存到本地
+        数据结构已升级为 Object + UUID
       </p>
     </div>
   )

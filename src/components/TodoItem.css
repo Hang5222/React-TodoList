@@ -1,0 +1,28 @@
+.todoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 18px;
+}
+
+.deleteBtn {
+  background: transparent;
+  border: none;
+  color: #ff4757; /* 红色 */
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+  padding: 5px;
+}
+
+.deleteBtn:hover {
+  color: #d63031; /* 深红色 */
+  transform: scale(1.1); /* 鼠标放上去稍微放大一点点 */
+}
+
+.todoItem:hover .deleteBtn {
+  opacity: 1;
+}

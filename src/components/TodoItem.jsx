@@ -1,32 +1,22 @@
-// src/components/TodoItem.jsx
+// 1. 引入图标
+import { FaTrash } from 'react-icons/fa';
+import './TodoItem.css';
 
 function TodoItem({ content, onDelete }) {
   return (
-    <li style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '12px 0',
-      borderBottom: '1px solid #f0f0f0',
-      fontSize: '18px'
-    }}>
-      {/* 显示内容 */}
+    <li className="todoItem">
+      {/* 左边的文字 */}
       <span>{content}</span>
       
-      {/* 调用父组件传来的删除函数 */}
+      {/* 右边的删除按钮 */}
       <button 
         onClick={onDelete}
-        style={{
-          backgroundColor: '#ff4757',
-          color: 'white',
-          border: 'none',
-          padding: '6px 12px',
-          borderRadius: '6px',
-          fontSize: '14px',
-          cursor: 'pointer'
-        }}
+        // 🌟 重点：修改样式，让它看起来像一个纯图标按钮
+        className="deleteBtn"
+        title="删除此项" // 鼠标放上去会有提示文字
       >
-        删除
+        {/* 2. 使用图标组件 */}
+        <FaTrash />
       </button>
     </li>
   );
