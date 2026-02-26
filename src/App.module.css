@@ -1,0 +1,95 @@
+/* src/App.module.css */
+
+/* 1. 白色卡片容器 */
+.container {
+  width: 100%;
+  max-width: 500px;       /* 限制最大宽度，防止在大屏太宽 */
+  padding: 40px;
+  background-color: #fff; /* 纯白背景 */
+  border-radius: 16px;    /* 圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* 漂亮的柔和阴影 */
+  text-align: center;     /* 文字居中 */
+}
+
+/* 2. 标题 */
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+/* 3. 输入框和按钮的一行 */
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.input {
+  flex: 1; /* 自动撑开 */
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #646cff; /* 聚焦变成紫色 */
+}
+
+.addBtn {
+  padding: 0 25px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.addBtn:hover {
+  background-color: #535bf2;
+}
+
+.addBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 4. 列表样式 */
+.todoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left; /* 列表内容靠左对齐更像清单 */
+}
+
+.todoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 18px;
+}
+
+.deleteBtn {
+  background-color: #ff4757;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0; /* 平时隐藏 */
+  transition: opacity 0.2s;
+}
+
+/* 鼠标放上去才显示删除按钮 */
+.todoItem:hover .deleteBtn {
+  opacity: 1;
+}
