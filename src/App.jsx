@@ -1,88 +1,58 @@
 import { useState, useEffect } from 'react';
-// 🌟 核心：引入刚才写的 CSS 模块
-// styles 是一个对象，里面包含了 container, title, addBtn 等所有类名
-import styles from './App.module.css'; 
+// 引入 CSS 模块
+import styles from './App.module.css';
+
+// 🌟 引入刚才拆分出去的子组件
+import Header from './components/Header';
+import TodoInput from './components/TodoInput';
+import TodoItem from './components/TodoItem';
 
 function App() {
-  // 1. 初始化状态 (从本地存储读取)
+  // --- 1. 核心数据 (CEO 掌握核心科技) ---
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem('my-todo-list');
-    if (savedTodos) {
-      return JSON.parse(savedTodos);
-    } else {
-      return ['学习 React', '优化 CSS 样式'];
-    }
+    return savedTodos ? JSON.parse(savedTodos) : ['组件化开发 React', '学习 Props'];
   });
 
-  const [inputValue, setInputValue] = useState('');
-
-  // 2. 自动保存 (当 todos 变化时)
+  // --- 2. 副作用 (自动存档) ---
   useEffect(() => {
     localStorage.setItem('my-todo-list', JSON.stringify(todos));
   }, [todos]);
 
-  // 3. 添加功能
-  function handleAdd() {
-    if (!inputValue.trim()) return;
-    setTodos([...todos, inputValue]);
-    setInputValue('');
+  // --- 3. 核心业务逻辑 ---
+  
+  // 新增逻辑：接收子组件传来的 newTodo 文字
+  function handleAdd(newTodo) {
+    setTodos([...todos, newTodo]);
   }
 
-  // 4. 删除功能
+  // 删除逻辑
   function handleDelete(indexToDelete) {
     setTodos(todos.filter((_, index) => index !== indexToDelete));
   }
 
+  // --- 4. 界面组装 ---
   return (
-    // 🌟 使用 styles.container 替换原来的 style={{...}}
     <div className={styles.container}>
       
-      <h1 className={styles.title}>React 待办列表</h1>
+      {/* 给 Header 传一个 title 属性 */}
+      <Header title="我的 React 清单" />
 
-      {/* 输入区域容器 */}
-      <div className={styles.inputGroup}>
-        <input 
-          type="text" 
-          value={inputValue} 
-          onChange={e => setInputValue(e.target.value)}
-          // 增加回车键添加功能，体验更好
-          onKeyDown={(e) => {
-            if(e.key === 'Enter') handleAdd();
-          }}
-          placeholder="请输入待办事项..."
-          className={styles.input} // 对应 CSS 里的 .input
-        />
-        
-        <button 
-          onClick={handleAdd} 
-          disabled={!inputValue.trim()} // 输入框为空时禁用按钮
-          className={styles.addBtn}     // 对应 CSS 里的 .addBtn
-        >
-          添加
-        </button>
-      </div>
+      {/* 给 TodoInput 传一个函数，让它在添加时通知我 */}
+      <TodoInput onAdd={handleAdd} />
 
       {/* 列表区域 */}
       <ul className={styles.todoList}>
-        {todos.map((todo, index) => {
-          return (
-            <li key={index} className={styles.todoItem}>
-              {/* 待办文字 */}
-              <span>{index + 1}. {todo}</span>
-              
-              {/* 删除按钮 */}
-              <button 
-                onClick={() => handleDelete(index)} 
-                className={styles.deleteBtn} // 对应 CSS 里的 .deleteBtn
-              >
-                删除
-              </button>
-            </li> 
-          )
-        })}
+        {todos.map((todo, index) => (
+          // 渲染每一个子项，把 content 和删除函数传下去
+          <TodoItem 
+            key={index} 
+            content={`${index + 1}. ${todo}`} 
+            onDelete={() => handleDelete(index)} 
+          />
+        ))}
       </ul>
-
-      {/* 底部小提示 (这里偷个懒用行内样式，或者你也可以去 module.css 加个类) */}
+      
       <p style={{ marginTop: '20px', color: '#aaa', fontSize: '12px' }}>
         数据已自动保存到本地
       </p>
