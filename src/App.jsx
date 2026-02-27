@@ -1,19 +1,18 @@
+// src/App.jsx
 import { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import Header from './components/Header';
 import TodoInput from './components/TodoInput';
 import TodoItem from './components/TodoItem';
-
-// 🌟 1. 引入 uuid
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem('my-todo-list');
-    // 如果有存档，直接用；如果没有，给个默认的对象数据
     return savedTodos ? JSON.parse(savedTodos) : [
-      { id: uuidv4(), text: '学习 React' },
-      { id: uuidv4(), text: '数据结构升级' }
+      // 🌟 初始数据也要加上 completed 字段
+      { id: uuidv4(), text: '点击文字标记完成', completed: false },
+      { id: uuidv4(), text: '再次点击取消完成', completed: true }
     ];
   });
 
@@ -21,19 +20,27 @@ function App() {
     localStorage.setItem('my-todo-list', JSON.stringify(todos));
   }, [todos]);
 
-  // 🌟 2. 修改添加逻辑：不再只存字符串，而是存一个对象
   function handleAdd(newTodoText) {
     const newTodoObj = {
-      id: uuidv4(), // 自动生成一个类似 '9b1deb4d-...' 的 ID
-      text: newTodoText
+      id: uuidv4(),
+      text: newTodoText,
+      completed: false // 🌟 新加的任务默认都是未完成的
     };
     setTodos([...todos, newTodoObj]);
   }
 
-  // 🌟 3. 修改删除逻辑：根据 ID 删，而不是根据 index 删（更安全）
   function handleDelete(id) {
-    // 只要 id 不一样的都留下
     setTodos(todos.filter(todo => todo.id !== id));
+  }
+
+  // 🌟🌟🌟 核心逻辑：切换完成状态
+  function handleToggle(id) {
+    setTodos(todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    }))
   }
 
   return (
@@ -42,18 +49,24 @@ function App() {
       <TodoInput onAdd={handleAdd} />
 
       <ul className={styles.todoList}>
-        {/* 🌟 4. 遍历时，item 现在是一个对象 {id, text} */}
         {todos.map((item) => (
           <TodoItem 
-            key={item.id}         // ✅ 终于可以用唯一的 id 做 key 了！
-            content={item.text}   // 传下去的文字是 item.text
-            onDelete={() => handleDelete(item.id)} // 删除时传 ID
+            key={item.id} 
+            content={item.text} 
+            // 🌟 传两个新东西下去：
+            // 1. 它的状态是完成了还是没完成？
+            completed={item.completed}
+            // 2. 点击文字时的处理函数
+            onToggle={() => handleToggle(item.id)}
+            
+            onDelete={() => handleDelete(item.id)} 
           />
         ))}
       </ul>
       
+      {/* 底部统计：算算还有几个没做完 */}
       <p style={{ marginTop: '20px', color: '#aaa', fontSize: '12px' }}>
-        数据结构已升级为 Object + UUID
+        {todos.filter(t => !t.completed).length} 个任务待完成
       </p>
     </div>
   )

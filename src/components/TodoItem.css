@@ -26,3 +26,15 @@
 .todoItem:hover .deleteBtn {
   opacity: 1;
 }
+/* 正常的文字样式 */
+.text {
+  cursor: pointer; /* 鼠标放上去变小手，提示可点击 */
+  flex: 1; /* 让文字占满剩余空间，这样点空白处也能触发 */
+  transition: color 0.2s;
+}
+
+/* 🌟 完成后的样式 */
+.completed {
+  text-decoration: line-through; /* 删除线 */
+  color: #ccc; /* 灰色 */
+}

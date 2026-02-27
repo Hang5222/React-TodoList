@@ -1,21 +1,26 @@
-// 1. 引入图标
 import { FaTrash } from 'react-icons/fa';
 import './TodoItem.css';
 
-function TodoItem({ content, onDelete }) {
+// 🌟 接收新传进来的 completed 和 onToggle
+function TodoItem({ content, completed, onToggle, onDelete }) {
   return (
     <li className="todoItem">
-      {/* 左边的文字 */}
-      <span>{content}</span>
+      {/* 
+         🌟 点击文字触发 onToggle
+         🌟 动态类名：如果 completed 是 true，就加上 'completed' 类 
+      */}
+      <span 
+        onClick={onToggle} 
+        className={`text ${completed ? 'completed' : ''}`}
+      >
+        {content}
+      </span>
       
-      {/* 右边的删除按钮 */}
       <button 
         onClick={onDelete}
-        // 🌟 重点：修改样式，让它看起来像一个纯图标按钮
         className="deleteBtn"
-        title="删除此项" // 鼠标放上去会有提示文字
+        title="删除此项"
       >
-        {/* 2. 使用图标组件 */}
         <FaTrash />
       </button>
     </li>
