@@ -1,0 +1,40 @@
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #646cff;
+}
+
+.addBtn {
+  padding: 0 25px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap; /* 防止按钮文字换行 */
+}
+
+.addBtn:hover {
+  background-color: #535bf2;
+}
+
+.addBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
